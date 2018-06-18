@@ -71,8 +71,10 @@ $(document).ready(function() {
 
   //attack button
     $('#attack').on('click', function() {
+      if(myCharData && myEnemyData) { 
         $('.your-attack').text('You hit ' + myEnemyData.name + ' for ' + myCharData.attackPower + ' damage.')
         $('.enemy-attack').text(myEnemyData.name + ' hit you back for ' + myEnemyData.counterAttackPower + ' damage.')
+      }
     });  
  
   // health points
