@@ -2,7 +2,7 @@
 const characters = [
 {
   name: 'Mario',
-  healthPoints: 300,
+  healthPoints: 220,
   attackPower: 6,
   counterAttackPower: 12,
   wasBeaten: false
@@ -10,14 +10,14 @@ const characters = [
 {
   name: 'Donkey Kong',
   healthPoints: 180,
-  attackPower: 8,
-  counterAttackPower: 20,
+  attackPower: 10,
+  counterAttackPower: 18,
   wasBeaten: false
 },
 {
   name: 'Bowser',
   healthPoints: 220,
-  attackPower: 4,
+  attackPower: 6,
   counterAttackPower: 24,
   wasBeaten: false
 },
@@ -128,8 +128,11 @@ $(document).ready(function() {
       if(enemyRemainingHP <= 0) {
         $('.your-attack').text('You have defeated ' + myEnemyData.name + '. You can choose a new enemy to fight.');
         $('.enemy-attack').text(' ');
-        myEnemyData.wasBeaten = true;
-        
+        for(let char of characters) {
+          if(myEnemyData.name == char.name)
+            char.wasBeaten = true;
+        }
+
         //remove enemy from screen
         $('.char').each(function( i ) {
           if($(this).attr('data-char') == myEnemyData.name) {
