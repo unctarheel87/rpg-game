@@ -2,29 +2,29 @@
 const characters = [
 {
   name: 'Mario',
-  healthPoints: 180,
+  healthPoints: 300,
   attackPower: 6,
   counterAttackPower: 12,
   wasBeaten: false
 },
 {
   name: 'Donkey Kong',
-  healthPoints: 220,
+  healthPoints: 180,
   attackPower: 8,
-  counterAttackPower: 25,
+  counterAttackPower: 20,
   wasBeaten: false
 },
 {
   name: 'Bowser',
-  healthPoints: 230,
-  attackPower: 12,
-  counterAttackPower: 14,
+  healthPoints: 220,
+  attackPower: 4,
+  counterAttackPower: 24,
   wasBeaten: false
 },
 {
   name: 'Wario',
-  healthPoints: 200,
-  attackPower: 14,
+  healthPoints: 170,
+  attackPower: 8,
   counterAttackPower: 10,
   wasBeaten: false
 }
@@ -69,7 +69,7 @@ $(document).ready(function() {
     //find current char loop
     for(let char of characters) {
       if(myChar == char.name) {
-        myCharData = char
+        myCharData = Object.assign({ }, char)
       }
     }
     myRemainingHP = myCharData.healthPoints;
@@ -92,7 +92,7 @@ $(document).ready(function() {
       //find current defender loop & sort data
       for(let char of characters) {
         if(myEnemy == char.name) {
-          myEnemyData = char
+          myEnemyData = Object.assign({ }, char)
         }
       }
       enemyRemainingHP = myEnemyData.healthPoints;
@@ -100,7 +100,9 @@ $(document).ready(function() {
   });
 
   //attack button
-  $('body').on('click', '#attack', function() {
+  $('body').on('click', '#attack', attack);
+
+  function attack() {
     if(myCharData && myEnemyData) { 
       $('.your-attack').text('You hit ' + myEnemyData.name + ' for ' + myCharData.attackPower + ' damage.')
       $('.enemy-attack').text(myEnemyData.name + ' hit you back for ' + myEnemyData.counterAttackPower + ' damage.')
@@ -139,6 +141,7 @@ $(document).ready(function() {
       } else if (myRemainingHP <= 0) {
         $('.your-attack').text('You lose...GAME OVER');
         $('.enemy-attack').text(' ');
+        createRestartBtn();
         myChar = null;
       }
       
@@ -158,12 +161,16 @@ $(document).ready(function() {
 
   if(charBeaten == 3) {
     $('.your-attack').text('YOU WIN!!!');
+    createRestartBtn();
+    }
+  }
+
+  function createRestartBtn() {
     const restartBtn = $('<button>')
     $('.outcome').append(restartBtn);
     restartBtn.text('Restart').addClass('restart');
     $('body').off('click', '#attack');
   }
-});
   
   //restart 
   $('body').on('click', '.restart', function() {
@@ -179,11 +186,12 @@ $(document).ready(function() {
       char.wasBeaten = false;
     }
     
-    $('.char').animate({ top: 0, left: 0 }).removeClass('defender-char').off('click');
+    $('.char').animate({ top: 0, left: 0 }).removeClass('defender-char enemy').off('click');
     $('.restart').remove();
     $('.your-attack').text('');
     setHP();
     $('body').one('click', '.char', chooseChar);
+    $('body').on('click', '#attack', attack);
   })
 });
 
