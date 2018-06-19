@@ -3,14 +3,14 @@ const characters = [
 {
   name: 'Mario',
   healthPoints: 180,
-  attackPower: 10,
+  attackPower: 6,
   counterAttackPower: 12
 },
 {
   name: 'Donkey Kong',
   healthPoints: 220,
   attackPower: 8,
-  counterAttackPower: 20
+  counterAttackPower: 25
 },
 {
   name: 'Bowser',
@@ -38,12 +38,13 @@ bowserHp.text(characters[2].healthPoints + ' HP');
 warioHp.text(characters[3].healthPoints + ' HP');
 
 //choice char data
-let myChar = ' ';
-let myEnemy = ' ';
+let myChar = '';
+let myEnemy = '';
 let myCharData = null;
 let myEnemyData = null;
-let myRemainingHP = ' ';
-let enemyRemainingHP = ' ';
+let myRemainingHP = '';
+let enemyRemainingHP = '';
+let baseAP = '';
 
 $(document).ready(function() {
 
@@ -64,25 +65,28 @@ $(document).ready(function() {
       }
     }
     myRemainingHP = myCharData.healthPoints;
+    baseAP = myCharData.attackPower;
   });
 
   //chose enemy to fight
-  $('body').one('click', '.enemy', function() {
-    let xCord = $(this).position().left - 15;
-    $(this).animate({ top: '+=285px', left: '-=' + xCord }, 'normal').addClass('defender-char');
-    $('.enemy').not(this).each(function( i ) {
-      let eachXCord = $(this).position().left - 15 - (i * 200);
-      $(this).animate({ left: '-=' + eachXCord }, 'normal').addClass('enemy').off('click');
-    });
-    myEnemy = $(this).attr('data-char'); 
+  $('body').on('click', '.enemy', function() {
+    if(!myEnemy) {
+      let xCord = $(this).position().left - 15;
+      $(this).animate({ top: '+=285px', left: '-=' + xCord }, 'normal').addClass('defender-char');
+      $('.enemy').not(this).each(function( i ) {
+        let eachXCord = $(this).position().left - 15 - (i * 200);
+        $(this).animate({ left: '-=' + eachXCord }, 'normal').addClass('enemy');
+      });
+      myEnemy = $(this).attr('data-char'); 
 
-    //find current defender loop & sort data
-    for(let char of characters) {
-      if(myEnemy == char.name) {
-        myEnemyData = char
+      //find current defender loop & sort data
+      for(let char of characters) {
+        if(myEnemy == char.name) {
+          myEnemyData = char
+        }
       }
+      enemyRemainingHP = myEnemyData.healthPoints;
     }
-    enemyRemainingHP = myEnemyData.healthPoints;
   });
 
   //attack button
@@ -92,17 +96,45 @@ $(document).ready(function() {
       $('.enemy-attack').text(myEnemyData.name + ' hit you back for ' + myEnemyData.counterAttackPower + ' damage.')
       
       //decrement HP
-      myRemainingHP = myRemainingHP - myCharData.counterAttackPower;
-      enemyRemainingHP = enemyRemainingHP - myEnemyData.counterAttackPower;
+      if(myRemainingHP >= 0 && enemyRemainingHP >= 0) {
+        myRemainingHP = myRemainingHP - myEnemyData.counterAttackPower;
+        enemyRemainingHP = enemyRemainingHP - myCharData.attackPower;
+      }
+
+      //increase AP
+      myCharData.attackPower = myCharData.attackPower + baseAP;
 
       $('.char').each(function( i ) {
         if($(this).attr('data-char') == myCharData.name) {
-          $('.hp', this).text(myRemainingHP + ' HP')
+          $('.hp', this).text(myRemainingHP + ' HP');
         } else if($(this).attr('data-char') == myEnemyData.name) {
-          $('.hp', this).text(enemyRemainingHP + ' HP')
+          $('.hp', this).text(enemyRemainingHP + ' HP');
         }
-      })
+      });
+      
+      //win-lose logice
+      if(enemyRemainingHP <= 0) {
+        $('.your-attack').text('You have defeated ' + myEnemyData.name + '. You can choose a new enemy to fight.');
+        $('.enemy-attack').text(' ');
+        
+        //remove enemy from screen
+        $('.char').each(function( i ) {
+          if($(this).attr('data-char') == myEnemyData.name) {
+            $(this).animate({ left: "-=300px" }, 'fast');
+          }
+        });
+
+        myEnemy = null;
+      } else if (myRemainingHP <= 0) {
+        $('.your-attack').text('You lose...GAME OVER');
+        $('.enemy-attack').text(' ');
+        myChar = null;
+      }
+      
+    } else if(myCharData && !myEnemyData) {
+      $('.your-attack').text('There is no enemy to attack');
     }  
   });  
 
 });
+
