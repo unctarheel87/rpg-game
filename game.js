@@ -125,7 +125,12 @@ $(document).ready(function() {
       });
       
       //win-lose logic
-      if(enemyRemainingHP <= 0) {
+      if(myRemainingHP <= 0) {
+        $('.your-attack').text('You lose...GAME OVER');
+        $('.enemy-attack').text(' ');
+        createRestartBtn();
+        myChar = null;
+      } else if(enemyRemainingHP <= 0) {
         $('.your-attack').text('You have defeated ' + myEnemyData.name + '. You can choose a new enemy to fight.');
         $('.enemy-attack').text(' ');
         for(let char of characters) {
@@ -141,12 +146,7 @@ $(document).ready(function() {
         });
 
         myEnemy = null;
-      } else if (myRemainingHP <= 0) {
-        $('.your-attack').text('You lose...GAME OVER');
-        $('.enemy-attack').text(' ');
-        createRestartBtn();
-        myChar = null;
-      }
+      }  
       
     } else if(myCharData && !myEnemyData) {
       $('.your-attack').text('There is no enemy to attack');
