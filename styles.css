@@ -16,6 +16,10 @@ body {
   font-size: 12px;
 }
 
+button, .card {
+  cursor: pointer;
+}
+
 /* character cards */
 .card {
   height: 155px;
