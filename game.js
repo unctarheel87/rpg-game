@@ -72,10 +72,11 @@ $(document).ready(function() {
   $('body').on('click', '.enemy', function() {
     if(!myEnemy) {
       let xCord = $(this).position().left - 15;
-      $(this).animate({ top: '+=285px', left: '-=' + xCord }, 'normal').addClass('defender-char');
+      $(this).animate({ top: '+=285px', left: '-=' + xCord }, 'normal').addClass('defender-char').removeClass('enemy');
       $('.enemy').not(this).each(function( i ) {
         let eachXCord = $(this).position().left - 15 - (i * 200);
-        $(this).animate({ left: '-=' + eachXCord }, 'normal').addClass('enemy');
+        console.log(eachXCord);
+        $(this).animate({ left: '-=' + eachXCord }, 'normal');
       });
       myEnemy = $(this).attr('data-char'); 
 
