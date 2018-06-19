@@ -53,6 +53,6 @@ button, .card {
   color: white;
 }
 
-.your-character, .enemies, .defender {
+.your-character, .enemies, .defender, .outcome {
   height: 210px;
 }
