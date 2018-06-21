@@ -60,7 +60,7 @@ function initGame() {
   $('.your-attack').text('');
 }
 
-//choice char data
+//char data
 let myChar = '';
 let myEnemy = '';
 let myCharData = null;
@@ -69,7 +69,6 @@ let myRemainingHP = '';
 let enemyRemainingHP = '';
 let baseAP = '';
 let charWasChosen = false;
-let defenderWasChosen = false;
 
 $(document).ready(function() {
   
