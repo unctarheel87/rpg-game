@@ -36,11 +36,28 @@ let donkeykongHp = $('.donkeykong-hp');
 let bowserHp = $('.bowser-hp');
 let warioHp = $('.wario-hp');
 
-function setHP() {
+function initGame() {
   marioHp.text(characters[0].healthPoints + ' HP');
   donkeykongHp.text(characters[1].healthPoints + ' HP');
   bowserHp.text(characters[2].healthPoints + ' HP');
   warioHp.text(characters[3].healthPoints + ' HP');
+
+  myChar = '';
+  myEnemy = '';
+  myCharData = null;
+  myEnemyData = null;
+  myRemainingHP = '';
+  enemyRemainingHP = '';
+  baseAP = '';
+  charWasChosen = false;
+  
+  for(let char of characters) {
+    char.wasBeaten = false;
+  }
+
+  $('.char').animate({ top: 0, left: 0 }).removeClass('defender-char enemy').off('click');
+  $('.restart').remove();
+  $('.your-attack').text('');
 }
 
 //choice char data
@@ -51,32 +68,37 @@ let myEnemyData = null;
 let myRemainingHP = '';
 let enemyRemainingHP = '';
 let baseAP = '';
-let hasStartedGame = false;
+let charWasChosen = false;
+let defenderWasChosen = false;
 
 $(document).ready(function() {
-  setHP();
   
   //choose char
   function chooseChar() {
-    let xCord = $(this).position().left - 15;
-    $(this).animate({ top: '+=205px', left: '-=' + xCord }, 'normal');
-    $('.char').not(this).each(function( i ) {
-      let eachXCord = $(this).position().left - 15 - (i * 200);
-      $(this).animate({ top: '+=410px', left: '-=' + eachXCord }, 'normal').addClass('enemy');
-    }).off('click'); 
-    myChar = $(this).attr('data-char');
-    
-    //find current char loop
-    for(let char of characters) {
-      if(myChar == char.name) {
-        myCharData = Object.assign({ }, char)
+    if(charWasChosen) {
+      return false
+    } else {
+      let xCord = $(this).position().left - 15;
+      $(this).animate({ top: '+=205px', left: '-=' + xCord }, 'normal');
+      $('.char').not(this).each(function( i ) {
+        let eachXCord = $(this).position().left - 15 - (i * 200);
+        $(this).animate({ top: '+=410px', left: '-=' + eachXCord }, 'normal').addClass('enemy');
+      }).off('click'); 
+      myChar = $(this).attr('data-char');
+      
+      //find current char loop
+      for(let char of characters) {
+        if(myChar == char.name) {
+          myCharData = Object.assign({ }, char)
+        }
       }
+      myRemainingHP = myCharData.healthPoints;
+      baseAP = myCharData.attackPower;
+      charWasChosen = true;
     }
-    myRemainingHP = myCharData.healthPoints;
-    baseAP = myCharData.attackPower;
   }
   
-  $('body').one('click', '.char', chooseChar);
+  $('body').on('click', '.char', chooseChar);
 
   //chose enemy to fight
   $('body').on('click', '.enemy', function() {
@@ -168,6 +190,7 @@ $(document).ready(function() {
     }
   }
 
+  //append restart btn
   function createRestartBtn() {
     const restartBtn = $('<button>')
     $('.outcome').append(restartBtn);
@@ -177,24 +200,9 @@ $(document).ready(function() {
   
   //restart 
   $('body').on('click', '.restart', function() {
-    myChar = '';
-    myEnemy = '';
-    myCharData = null;
-    myEnemyData = null;
-    myRemainingHP = '';
-    enemyRemainingHP = '';
-    baseAP = '';
-    
-    for(let char of characters) {
-      char.wasBeaten = false;
-    }
-    
-    $('.char').animate({ top: 0, left: 0 }).removeClass('defender-char enemy').off('click');
-    $('.restart').remove();
-    $('.your-attack').text('');
-    setHP();
-    $('body').one('click', '.char', chooseChar);
+    initGame();
     $('body').on('click', '#attack', attack);
   })
+  initGame();
 });
 
