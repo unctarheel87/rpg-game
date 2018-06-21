@@ -24,7 +24,7 @@ const characters = [
 {
   name: 'Wario',
   healthPoints: 170,
-  attackPower: 8,
+  attackPower: 9,
   counterAttackPower: 10,
   wasBeaten: false
 }
