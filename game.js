@@ -2,29 +2,29 @@
 const characters = [
 {
   name: 'Mario',
-  healthPoints: 220,
-  attackPower: 6,
+  healthPoints: 210,
+  attackPower: 7,
   counterAttackPower: 12,
   wasBeaten: false
 },
 {
   name: 'Donkey Kong',
   healthPoints: 180,
-  attackPower: 10,
-  counterAttackPower: 18,
+  attackPower: 8,
+  counterAttackPower: 16,
   wasBeaten: false
 },
 {
   name: 'Bowser',
   healthPoints: 220,
   attackPower: 6,
-  counterAttackPower: 24,
+  counterAttackPower: 20,
   wasBeaten: false
 },
 {
   name: 'Wario',
   healthPoints: 170,
-  attackPower: 9,
+  attackPower: 10,
   counterAttackPower: 10,
   wasBeaten: false
 }
