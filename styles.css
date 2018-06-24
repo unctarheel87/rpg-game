@@ -7,7 +7,7 @@ body {
   margin: 15px;
 }
 
-h1 {
+.title h1, .title p {
   position: relative;
   left: 760px;
 }
